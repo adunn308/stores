@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <title>Welcome to Stores!</title>
+    </head>
+    <body>
+        {% if error_message %}
+        <h3 style="color:red;">{{error_message}}</h3>
+        {% endif %}
+        <h1>Stores (North to South) within {{radius}} metres of {{postcode}}</h1>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Postcode</th>
+                <th>Longitude</th>
+                <th>Latitude</th>
+            </tr>
+        {% for record in results %}
+           <tr>
+               <td>{{record.name}}</td>
+               <td>{{record.postcode}}</td>
+               <td>{{record.longitude}}</td>
+               <td>{{record.latitude}}</td>
+           </tr>
+        {% endfor %}
+        </table>
+    </body>
+</html>

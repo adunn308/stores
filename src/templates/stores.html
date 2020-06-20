@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <title>Welcome to Stores!</title>
+    </head>
+    <body>
+        <h1>Stores (alphabetically)</h1>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Postcode</th>
+                <th>Longitude</th>
+                <th>Latitude</th>
+            </tr>
+        {% for record in info %}
+           <tr>
+               <td>{{record.name}}</td>
+               <td>{{record.postcode}}</td>
+               <td>{{record.longitude}}</td>
+               <td>{{record.latitude}}</td>
+           </tr>
+        {% endfor %}
+        </table>
+    </body>
+</html>

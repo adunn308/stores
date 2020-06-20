@@ -1,0 +1,21 @@
+import os
+
+from .test_setup import ProjectTests
+from data_manager import DataManager
+from models import Store
+from database import db
+
+
+class TestImport(ProjectTests):
+
+    def test_correct_number_imported(self):
+        stores = db.session.query(Store).all()
+        self.assertEquals(len(stores), 6)
+
+    # def test_no_duplicated(self):
+    #     db_manage = DataManager()
+    #     folder_path = os.path.dirname(os.path.abspath(__file__))
+    #     db_manage.load_data(folder_path)
+    #
+    #     stores = db.session.query(Store).all()
+    #     self.assertEquals(len(stores), 6)

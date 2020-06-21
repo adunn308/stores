@@ -1,5 +1,6 @@
-from database import db
 from geoalchemy2 import Geometry
+
+from src import db
 
 
 class Store(db.Model):
@@ -17,14 +18,6 @@ class Store(db.Model):
         return "<City {name} ({lat}, {lon})>".format(
             name=self.name, lat=self.latitude, lon=self.longitude)
 
-    @classmethod
-    def update_geometries(cls):
-        """Using each city's longitude and latitude, add geometry data to db."""
-
-        stores = Store.query.all()
-
-        for store in stores:
-            point = 'POINT({} {})'.format(store.longitude, store.latitude)
-            store.geo = point
-
-        db.session.commit()
+    def update_geometry(self):
+        point = 'POINT({} {})'.format(self.longitude, self.latitude)
+        self.geo = point

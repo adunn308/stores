@@ -1,21 +1,19 @@
 import requests
 
-from geoalchemy2 import functions, Geometry
+from geoalchemy2 import functions
 
-from models import Store
-from config import EnvConfig
+from flask import current_app
+from src.models import Store
 
 
-class StoresObject(object):
-    def __init__(self):
-        self.config = EnvConfig()
+class GetStores(object):
 
     def list_stores(self):
         sorted_stores = Store.query.order_by(Store.name).all()
         return sorted_stores
 
-    def check_stores(self, postcode, distance):
-        centre_long_lat, error_message = self.postcode_long_lat(postcode)
+    def find_stores(self, postcode, distance):
+        centre_long_lat, error_message = self._postcode_long_lat(postcode)
         radius = distance
         if not error_message:
             point = functions.ST_Point(centre_long_lat[0], centre_long_lat[1])
@@ -26,8 +24,8 @@ class StoresObject(object):
             results = []
         return results, error_message
 
-    def postcode_long_lat(self, postcode):
-        postcodes_url = f"{self.config.postcodes_api}/postcodes/{postcode}"
+    def _postcode_long_lat(self, postcode):
+        postcodes_url = f"{current_app.config['POSTCODES_API']}/postcodes/{postcode}"
         try:
             resp = requests.get(postcodes_url)
             resp.raise_for_status()
@@ -39,4 +37,3 @@ class StoresObject(object):
             print(e)
             error_message = "Could not find details on this postcode, please check it is valid or try again later"
             return None, error_message
-

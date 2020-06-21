@@ -1,9 +1,9 @@
 import os
 
-from .test_setup import ProjectTests
-from data_manager import DataManager
-from models import Store
-from database import db
+from src.test.test_setup import ProjectTests
+from src.data_manager import DataManager
+from src.models import Store
+from src import db
 
 
 class TestImport(ProjectTests):
@@ -12,10 +12,10 @@ class TestImport(ProjectTests):
         stores = db.session.query(Store).all()
         self.assertEquals(len(stores), 6)
 
-    # def test_no_duplicated(self):
-    #     db_manage = DataManager()
-    #     folder_path = os.path.dirname(os.path.abspath(__file__))
-    #     db_manage.load_data(folder_path)
-    #
-    #     stores = db.session.query(Store).all()
-    #     self.assertEquals(len(stores), 6)
+    def test_no_duplicated(self):
+        db_manage = DataManager()
+        folder_path = os.path.dirname(os.path.abspath(__file__))
+        db_manage.load_data(folder_path)
+
+        stores = db.session.query(Store).all()
+        self.assertEquals(len(stores), 6)

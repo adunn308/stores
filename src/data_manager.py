@@ -4,37 +4,38 @@ import requests
 
 from requests.exceptions import HTTPError
 from sqlalchemy.ext.declarative import declarative_base
+from flask import current_app
 
-from config import EnvConfig
-from models import Store
-from database import db
-
+from src.models import Store
+from src import db
 
 Base = declarative_base()
 
 
 class DataManager(object):
-    def __init__(self):
-        self.config = EnvConfig()
 
     def load_data(self, folder_path):
         path_to_data = os.path.join(folder_path, 'data/stores.json')
         data = json.load(open(path_to_data))
-        for store in data:
-            existing_record = db.session.query(Store).filter_by(name=store['name'], postcode=store['postcode']).first()
-            if existing_record:
-                continue
-            else:
-                new_record = Store(name=store['name'], postcode=store['postcode'])
-                record = self.get_lat_lon(new_record)
-                if not record:
+        try:
+            for store in data:
+                existing_record = db.session.query(Store).filter_by(name=store['name'], postcode=store['postcode']).first()
+                if existing_record:
                     continue
-                db.session.add(record)
-        Store.update_geometries()
-        db.session.commit()
+                else:
+                    new_record = Store(name=store['name'], postcode=store['postcode'])
+                    record = self.get_lat_lon(new_record)
+                    if not record:
+                        continue
+                    record.update_geometry()
+                    db.session.add(record)
+            db.session.commit()
+        except:
+            # Catch exception if something goes wrong with the data import
+            db.session.rollback()
 
     def get_lat_lon(self, record):
-        postcodes_url = f"{self.config.postcodes_api}/postcodes/{record.postcode}"
+        postcodes_url = f"{current_app.config['POSTCODES_API']}/postcodes/{record.postcode}"
         try:
             resp = requests.get(postcodes_url)
             resp.raise_for_status()
@@ -48,7 +49,7 @@ class DataManager(object):
 
     def try_expired(self, record):
         try:
-            expired_url = f"{self.config.postcodes_api}/terminated_postcodes/{record.postcode}"
+            expired_url = f"{current_app.config['POSTCODES_API']}/terminated_postcodes/{record.postcode}"
             resp = requests.get(expired_url)
             resp.raise_for_status()
             updated_record = self._fetch_data_from_resp(resp, record)

@@ -1,24 +1,30 @@
-<html>
-    <head>
-        <title>Welcome to Stores!</title>
-    </head>
-    <body>
-        <h1>Stores (alphabetically)</h1>
-        <table>
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>Stores (alphabetically)</h1>
+{% endblock %}
+
+{% block content %}
+
+    <table class="table table-striped">
+        <thead>
             <tr>
-                <th>Name</th>
-                <th>Postcode</th>
-                <th>Longitude</th>
-                <th>Latitude</th>
+                <th scope="col">Name</th>
+                <th scope="col">Postcode</th>
+                <th scope="col">Longitude</th>
+                <th scope="col">Latitude</th>
             </tr>
-        {% for record in info %}
-           <tr>
-               <td>{{record.name}}</td>
-               <td>{{record.postcode}}</td>
-               <td>{{record.longitude}}</td>
-               <td>{{record.latitude}}</td>
-           </tr>
-        {% endfor %}
-        </table>
-    </body>
-</html>
+        </thead>
+        <tbody>
+            {% for record in info %}
+               <tr>
+                   <td scope="row">{{record.name}}</td>
+                   <td scope="row">{{record.postcode}}</td>
+                   <td scope="row">{{record.longitude}}</td>
+                   <td scope="row">{{record.latitude}}</td>
+               </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

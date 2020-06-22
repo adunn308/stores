@@ -42,6 +42,8 @@ Tests are implemented using nosetests. In order to use the test database rather 
 - Postcode validation on user input, instead of the generic error message. Written in the app to avoid another external request.
 - Adding a logger rather than simply using print statements.
 - In the tests, I'm loading all the data in the setup rather than for each set of tests. This is simply because I'm using the same dataset and could be easily changed if other sets were added.
+- I'd also like to add different distance types to the find stores endpoint, eg. km, miles.
+- The templates are very basic and need improvement.
 
 #### - iii) What part did you find the hardest? What part are you most proud of? In both cases, why?
 - The hardest part of the test was deciding on a structure for the app. Flask is great because it's so open with what you can do, but this also is a challenge as there are always too many ways to do things.
